@@ -40,7 +40,7 @@ vec4 nlWater(
     #if defined(NL_WATER_REFLECTION)
       if (wPos.y < 0.0) {
         vec2 parallax = viewDir.xz/viewDir.y;
-        vec2 projectedPos = wPos.xz - parallax*5.0*(1.0-bump);
+        vec2 projectedPos = wPos.xz - parallax*100.0*(1.0-bump);
         float fade = clamp(2.0 - 0.004*length(projectedPos), 0.0, 1.0);
         //projectedPos += fade*parallax;
 
@@ -50,8 +50,8 @@ vec4 nlWater(
         #endif
 
         #if NL_CLOUD_TYPE == 1
-          vec4 clouds = renderCloudsSimple(projectedPos.xyy, t, rainFactor, zenithCol, horizonCol, horizonEdgeCol, FOG_COLOR);
-          waterRefl = mix(waterRefl, 1.5*clouds.rgb, clouds.a*fade);
+/*          vec4 clouds = renderCloudsSimple(projectedPos.xyy, t, rainFactor, zenithCol, horizonCol, horizonEdgeCol, FOG_COLOR);
+          waterRefl = mix(waterRefl, 1.5*clouds.rgb, clouds.a*fade);*/
         #endif
       }
     #endif
