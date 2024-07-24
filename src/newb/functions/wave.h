@@ -93,13 +93,13 @@ void nlWave(
   bool isFarmPlant = (bPos.y==0.9375) && (bPosC.x==0.25 ||  bPosC.y==0.25);
   bool shouldWave = ((isTreeLeaves || isPlants || isVines) && isColored) || (isFarmPlant && isTop);
 
-  float windStrength = lit.y*(noise1D(t*0.36) + rainFactor*0.4);
+  vec2 windStrength = vec2(lit.y*(noise1D(t*0.36) + rainFactor*0.4), lit.y*(noise1D(t*0.45) + rainFactor*0.5));
 
   // darken farm plants bottom
-  light *= isFarmPlant && !isTop ? 0.7 : 1.1;
+  light *= isFarmPlant && !isTop ? 0.55 : 1.1;
   if (isColored && !isTreeLeaves && uv0.y>0.375 && uv0.y<0.466) {
     // make grass bottom more dark depending how deep it is
-    light *= isTop ? 1.2 : 1.2 - 1.2*(bPos.y>0.0 ? 1.5-bPos.y : 0.5);
+    light *= isTop ? 1.2 : 1.33 - 1.33*(bPos.y>0.0 ? 1.5-bPos.y : 0.5);
   }
 
   #ifdef NL_PLANTS_WAVE
@@ -109,7 +109,7 @@ void nlWave(
 
     if (shouldWave) {
 
-      float wave = NL_PLANTS_WAVE*windStrength;
+      vec2 wave = vec2((NL_PLANTS_WAVE*windStrength.x), (NL_PLANTS_WAVE*windStrength.y*1.2));
 
       if (isTreeLeaves) {
         wave *= 0.5;
@@ -127,13 +127,13 @@ void nlWave(
         sin(t*NL_WAVE_SPEED*1.5 + phaseDiff),
         rainFactor);
 
-      //worldPos.y -= 1.0-sqrt(1.0-wave*wave);
-      worldPos.xyz -= vec3(wave, wave*wave*0.5, wave);
+      worldPos.y -= 1.0-sqrt(1.0-wave.x*wave.y);
+      worldPos.xz += vec2(wave.x*1.9*noise1D(t*1.0), wave.y*1.6*noise1D(t*1.1));
     }
   #endif
 
   #ifdef NL_LANTERN_WAVE
-    lanternWave(worldPos, cPos, bPos, bPosC, texPosY, rainFactor, uv1, windStrength, t);
+    lanternWave(worldPos, cPos, bPos, bPosC, texPosY, rainFactor, uv1, windStrength.x, t);
   #endif
 }
 

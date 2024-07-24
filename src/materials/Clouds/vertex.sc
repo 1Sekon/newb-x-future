@@ -5,7 +5,7 @@ $input a_color0, a_position
 $output v_color0
 #include <newb/config.h>
 #if NL_CLOUD_TYPE == 2
-  $output v_color1, v_color2, v_fogColor
+  $output v_color1, v_color2, v_fogColor, v_sCol
 #endif
 
 #include <bgfx_shader.sh>
@@ -88,8 +88,10 @@ void main() {
       // make cloud plane spherical
       float len = length(worldPos.xz)*0.01;
       worldPos.y -= len*len*clamp(0.2*worldPos.y, -1.0, 1.0);
+      
+      vec3 sCol = nlRenderSky(horizonEdgeCol, horizonCol, zenithCol, -normalize(worldPos), FogColor.rgb, t, rain, false, false, false);
 
-      color = renderCloudsSimple(worldPos.xyz, t, rain, zenithCol, horizonCol, horizonEdgeCol);
+      color = renderCloudsSimple(worldPos.xyz, t, rain, sCol, sCol, sCol, FogColor.rgb);
 
       // cloud depth
       worldPos.y -= NL_CLOUD1_DEPTH*color.a*3.3;
@@ -107,6 +109,7 @@ void main() {
       v_color2 = vec4(horizonEdgeCol, ViewPositionAndTime.w);
       v_color1 = vec4(zenithCol, rain);
       color = vec4(worldPos, fade);
+      v_sCol = nlRenderSky(horizonEdgeCol, horizonCol, zenithCol, -normalize(worldPos), FogColor.rgb, ViewPositionAndTime.w, rain, false, false, false);
     #endif 
   #endif
 

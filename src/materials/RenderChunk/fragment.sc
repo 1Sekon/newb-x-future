@@ -1,4 +1,4 @@
-$input v_color0, v_color1, v_fog, v_refl, v_texcoord0, v_lightmapUV, v_extra
+$input v_color0, v_color1, v_fog, v_refl, v_texcoord0, v_lightmapUV, v_extra, v_EndRefl
 
 #include <bgfx_shader.sh>
 #include <newb/main.sh>
@@ -30,7 +30,7 @@ void main() {
     color = v_color0;
   #endif
 
-  vec3 glow = nlGlow(s_MatTexture, v_texcoord0, v_extra.a);
+  vec3 glow = nlGlow(s_MatTexture, v_texcoord0, v_extra.a, 1024.0, 2048.0);
 
   diffuse.rgb *= diffuse.rgb;
 
@@ -63,9 +63,25 @@ void main() {
     }
   }
 
-  diffuse.rgb = mix(diffuse.rgb, v_fog.rgb, v_fog.a);
+// end reflection effects
+  if (v_extra.b > 0.9) {
+    diffuse.rgb += v_EndRefl.rgb*v_EndRefl.a;
+  } else if (v_EndRefl.a > 0.0) {
+    // reflective effect - only on xz plane
+    float dy = abs(dFdy(v_extra.g));
+    if (dy < 0.0002) {
+      float mask = v_EndRefl.a*(clamp(v_extra.r*10.0,8.2,8.8)-7.8);
+      diffuse.rgb *= 1.0 - 0.6*mask;
+      diffuse.rgb += v_EndRefl.rgb*mask;
+    }
+  }
 
+  diffuse.rgb = mix(diffuse.rgb, v_fog.rgb, v_fog.a);
   diffuse.rgb = colorCorrection(diffuse.rgb);
+
+  #ifdef NXF_FAKE_DEPTH_TEX
+    diffuse.rgb = mix(diffuse.rgb, nxfFakeDepthMap(s_MatTexture, diffuse.rgb, v_texcoord0, v_lightmapUV, vec2(0.00008, 0.000145)), (1.0-v_fog.a));
+  #endif
 
   gl_FragColor = diffuse;
 }

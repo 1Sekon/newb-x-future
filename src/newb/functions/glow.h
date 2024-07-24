@@ -19,7 +19,7 @@ vec3 glowDetectC(sampler2D tex, vec2 uv) {
   return glowDetect(texture2DLod(tex, uv, 0.0));
 }
 
-vec3 nlGlow(sampler2D tex, vec2 uv, float shimmer) {
+vec3 nlGlow(sampler2D tex, vec2 uv, float shimmer, float sizeX, float sizeY) {
   vec3 glow = glowDetectC(tex, uv);
 
   #ifdef NL_GLOW_LEAK
@@ -27,7 +27,7 @@ vec3 nlGlow(sampler2D tex, vec2 uv, float shimmer) {
     // c3 c4 c5
     // c2    c6
     // c1 c8 c7
-    const vec2 texSize = vec2(2048.0, 1024.0);
+    const vec2 texSize = vec2(sizeX, sizeY);
     const vec2 offset = 1.0 / texSize;
 
     vec3 c1 = glowDetectC(tex, uv - offset);
@@ -72,6 +72,19 @@ float nlGlowShimmer(vec3 cPos, float t) {
   float d = dot(cPos, vec3(1.0,1.0,1.0));
   float shimmer = sin(1.57*d + 0.7854*sin(d + 0.1*t) + 0.8*t);
   return shimmer * shimmer;
+}
+
+vec3 nxfFakeDepthMap(sampler2D sMat, vec3 diffuse, vec2 texcoord, vec2 lightmap, vec2 offset) {
+  vec3 shiftTex, result = vec3(0.0, 0.0, 0.0);
+
+  shiftTex -= texture2DLod(sMat, texcoord - offset, 0.0).rgb;
+  shiftTex += texture2DLod(sMat, texcoord + offset, 0.0).rgb;
+
+  shiftTex = ((((shiftTex * 0.5) + 0.5) * 2.0) - 1.0);
+  shiftTex = min(max(shiftTex, 0.0), 1.0);
+  result = clamp(diffuse + (diffuse * shiftTex), 0.0, 1.0);
+
+  return mix(diffuse, result, lightmap.x);
 }
 
 #endif

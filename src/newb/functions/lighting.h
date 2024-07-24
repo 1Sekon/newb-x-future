@@ -7,15 +7,7 @@
 // sunlight tinting
 vec3 sunLightTint(float dayFactor, float rain, vec3 FOG_COLOR) {
 
-  float tintFactor = FOG_COLOR.g + 0.1*FOG_COLOR.r;
-  float noon = clamp((tintFactor-0.37)/0.45,0.0,1.0);
-  float morning = clamp((tintFactor-0.05)*3.125,0.0,1.0);
-
-  vec3 clearTint = mix(
-    mix(NL_NIGHT_SUN_COL, NL_MORNING_SUN_COL, morning),
-    mix(NL_MORNING_SUN_COL, NL_NOON_SUN_COL, noon),
-    dayFactor
-  );
+  vec3 clearTint = mix(mix(NL_NOON_SUN_COL, NL_MORNING_SUN_COL, duskD(FOG_COLOR)), NL_NIGHT_SUN_COL, nightD(FOG_COLOR));
 
   float r = 1.0-rain;
   r *= r;
@@ -25,8 +17,7 @@ vec3 sunLightTint(float dayFactor, float rain, vec3 FOG_COLOR) {
 
 vec3 nlLighting(
   vec3 wPos, out vec3 torchColor, vec3 COLOR, vec3 FOG_COLOR, float rainFactor, vec2 uv1, vec2 lit, bool isTree,
-  vec3 horizonCol, vec3 zenithCol, float shade, bool end, bool nether, bool underwater, highp float t
-) {
+  vec3 horizonCol, vec3 zenithCol, float shade, bool end, bool nether, bool underwater, highp float t) {
   // all of these will be multiplied by tex uv1 in frag so functions should be divided by uv1 here
 
   vec3 light;
@@ -61,7 +52,7 @@ vec3 nlLighting(
     float dayFactor = min(dot(FOG_COLOR.rgb, vec3(0.5,0.4,0.4))*(1.0 + 1.9*rainFactor), 1.0);
     float nightFactor = 1.0-dayFactor*dayFactor;
     float rainDim = min(FOG_COLOR.g, 0.25)*rainFactor;
-    float lightIntensity = NL_SUN_INTENSITY*(1.0 - rainDim)*(1.0 + NL_NIGHT_BRIGHTNESS*nightFactor);
+    float lightIntensity = mix(mix(NL_SUN_INTENSITY*(1.0 - rainDim), 0.12*(1.0 - rainDim), duskD(FOG_COLOR)), NL_SUN_INTENSITY*(1.0 + NL_NIGHT_BRIGHTNESS), nightD(FOG_COLOR));
 
     // min ambient in caves
     light = vec3_splat((1.35+NL_CAVE_BRIGHTNESS)*(1.0-uv1.x)*(1.0-uv1.y));
@@ -71,7 +62,8 @@ vec3 nlLighting(
 
     // shadow cast by top light
     float shadow = step(0.93, uv1.y);
-    shadow = max(shadow, (1.0 - NL_SHADOW_INTENSITY + (0.6*NL_SHADOW_INTENSITY*nightFactor))*lit.y);
+    float shadowIntensity = mix(NL_SHADOW_INTENSITY, 0.03, duskD(FOG_COLOR));
+    shadow = max(shadow, (1.0 - shadowIntensity + (0.6*NL_SHADOW_INTENSITY*nightFactor))*lit.y);
     shadow *= shade > 0.8 ? 1.0 : 0.8;
 
     // shadow cast by simple cloud

@@ -61,7 +61,7 @@ vec4 nlRefl(
           float fade = clamp(2.0 - 0.004*length(projectedPos), 0.0, 1.0);
           //projectedPos += fade*parallax;
 
-          vec4 aurora = renderAurora(projectedPos.xyy, t, rainFactor, horizonEdgeCol);
+          vec4 aurora = renderAurora(wPos*5.0, t, rainFactor, horizonEdgeCol);
           wetRefl.rgb += 2.0*aurora.rgb*aurora.a*fade;
         #endif
 
@@ -81,6 +81,27 @@ vec4 nlRefl(
   #endif
 
   return wetRefl;
+}
+
+vec4 nxfEndRefl(vec2 lit, vec2 uv1, float camDist, vec3 wPos, vec3 viewDir, vec3 torchColor, vec3 horizonEdgeCol, vec3 horizonCol, vec3 zenithCol, vec3 FOG_COLOR, float rainFactor, float renderDist, highp float t, bool underWater, bool end, bool nether)
+{
+  vec4 Refl = vec4(0.0,0.0,0.0,0.0);
+if(end){
+    // clip reflection when far (better performance)
+    float endDist = renderDist;
+    if (camDist < endDist) {
+      float cosR = max(viewDir.y, 0.0);
+
+      if (wPos.y < 0.0) {
+        Refl.rgb = getSkyRefl(horizonEdgeCol, horizonCol, zenithCol, viewDir, FOG_COLOR, t, -wPos.y, rainFactor, end, underWater, nether);
+        Refl.a = calculateFresnel(cosR, 0.03)*0.7;
+
+        // fade out before clip
+        Refl.a *= clamp(2.0-2.0*camDist/endDist, 0.0, 1.0);
+    }
+  }
+}
+  return Refl;
 }
 
 #endif

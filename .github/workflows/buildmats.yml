@@ -1,0 +1,90 @@
+name: build materials
+
+on:
+  workflow_dispatch:
+    inputs:
+      material:
+        description: 'materials to build, must contains spaces between each materials'
+        required: true
+        type: string
+      profile:
+        description: 'profile'
+        required: true
+        default: 'Android'
+        type: choice
+        options:
+        - Android
+        - Windows
+        - IOS
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    if:  ${{ (github.event.inputs.profile == 'Android') }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/cache@v4
+      with:
+        key: env-files-linux-laz
+        path: |
+          ${{ github.workspace }}/tool/data
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' 
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    - run: |
+        ./build.sh setup
+        ./build.sh mats -m ${{ inputs.material}} -p android
+    - uses: actions/upload-artifact@v4
+      with:
+        name: mats-android
+        path: ./build/android
+
+  windows:
+    runs-on: windows-2022
+    if:  ${{ (github.event.inputs.profile == 'Windows') }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/cache@v4
+      with:
+        key: env-files-win-laz
+        path: |
+          ${{ github.workspace }}/tool/data
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' 
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    - run: |
+        .\build.bat setup
+        .\build.bat mats -m ${{ inputs.material}} -p windows
+    - uses: actions/upload-artifact@v4
+      with:
+        name: mats-windows
+        path: ./build/windows
+
+  ios:
+    runs-on: ubuntu-latest
+    if:  ${{ (github.event.inputs.profile == 'IOS') }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/cache@v4
+      with:
+        key: env-files-linux-laz
+        path: |
+          ${{ github.workspace }}/tool/data
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' 
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    - run: |
+        ./build.sh setup
+        ./build.sh mats -m ${{ inputs.material}} -p ios
+    - uses: actions/upload-artifact@v4
+      with:
+        name: mats-ios
+        path: ./build/ios

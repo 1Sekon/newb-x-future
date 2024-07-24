@@ -37,10 +37,10 @@ vec4 nlWater(
     waterRefl = getSkyRefl(horizonEdgeCol, horizonCol, zenithCol, viewDir, FOG_COLOR, t, -wPos.y, rainFactor, end, underWater, nether);
 
     // cloud and aurora reflection
-    #if defined(NL_WATER_CLOUD_REFLECTION)
+    #if defined(NL_WATER_REFLECTION)
       if (wPos.y < 0.0) {
         vec2 parallax = viewDir.xz/viewDir.y;
-        vec2 projectedPos = wPos.xz - parallax*100.0*(1.0-bump);
+        vec2 projectedPos = wPos.xz - parallax*5.0*(1.0-bump);
         float fade = clamp(2.0 - 0.004*length(projectedPos), 0.0, 1.0);
         //projectedPos += fade*parallax;
 
@@ -50,7 +50,7 @@ vec4 nlWater(
         #endif
 
         #if NL_CLOUD_TYPE == 1
-          vec4 clouds = renderCloudsSimple(projectedPos.xyy, t, rainFactor, zenithCol, horizonCol, horizonEdgeCol);
+          vec4 clouds = renderCloudsSimple(projectedPos.xyy, t, rainFactor, zenithCol, horizonCol, horizonEdgeCol, FOG_COLOR);
           waterRefl = mix(waterRefl, 1.5*clouds.rgb, clouds.a*fade);
         #endif
       }
@@ -81,7 +81,9 @@ vec4 nlWater(
   float fresnel = calculateFresnel(cosR, 0.03);
   float opacity = 1.0-cosR;
 
-  color.rgb *= 0.22*NL_WATER_TINT*(1.0-0.8*fresnel);
+
+  // Water tint
+  color.rgb *= 0.3*zenithCol*(1.0-0.8*fresnel);
 
   #ifdef NL_WATER_FOG_FADE
     color.a *= NL_WATER_TRANSPARENCY;

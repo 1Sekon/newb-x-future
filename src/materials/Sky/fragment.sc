@@ -14,6 +14,7 @@ void main() {
     vec3 viewDir = normalize(v_worldPos);
     bool underWater = v_underwaterRainTime.x > 0.5;
     float rainFactor = v_underwaterRainTime.y;
+    float mask = (1.0-1.0*rainFactor)*max(1.0 - 3.0*max(v_fogColor.b, v_fogColor.g), 0.0);
 
     vec3 zenithCol;
     vec3 horizonCol;
@@ -32,6 +33,8 @@ void main() {
 
     vec3 skyColor = nlRenderSky(horizonEdgeCol, horizonCol, zenithCol, -viewDir, v_fogColor, v_underwaterRainTime.z, rainFactor, false, underWater, false);
     skyColor = colorCorrection(skyColor);
+
+    if(!underWater)drawMeteors(skyColor.rgb, v_worldPos.xz, v_underwaterRainTime.z, mask);
 
     gl_FragColor = vec4(skyColor, 1.0);
   #else
