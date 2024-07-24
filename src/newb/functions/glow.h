@@ -75,7 +75,8 @@ float nlGlowShimmer(vec3 cPos, float t) {
 }
 
 vec3 nxfFakeDepthMap(sampler2D sMat, vec3 diffuse, vec2 texcoord, vec2 lightmap, vec2 offset) {
-  vec3 shiftTex, result = vec3(0.0, 0.0, 0.0);
+  vec3 shiftTex = vec3(0.0, 0.0, 0.0);
+  vec3 result = vec3(0.0, 0.0, 0.0);
 
   shiftTex -= texture2DLod(sMat, texcoord - offset, 0.0).rgb;
   shiftTex += texture2DLod(sMat, texcoord + offset, 0.0).rgb;
