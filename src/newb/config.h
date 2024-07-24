@@ -68,7 +68,7 @@
 #define NXF_MIST_DENS_DAWN 0.27
 #define NXF_MIST_DENS_NIGHT 1.3
 
-#define NL_RAIN_MIST_OPACITY 0.3 // [toggle] 0.04 very subtle ~ 0.5 thick rain mist blow
+//#define NL_RAIN_MIST_OPACITY 0.3 // [toggle] 0.04 very subtle ~ 0.5 thick rain mist blow
 
 /* Sky colors - zenith=top, horizon=bottom */
 #define NL_DAY_ZENITH_COL    vec3(0.151,0.322,0.992)*1.1
