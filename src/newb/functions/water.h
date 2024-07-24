@@ -40,7 +40,7 @@ vec4 nlWater(
     #if defined(NL_WATER_REFLECTION)
       if (wPos.y < 0.0) {
         vec2 parallax = viewDir.xz/viewDir.y;
-        vec2 projectedPos = wPos.xz - parallax*5.0*(1.0-bump);
+        vec2 projectedPos = wPos.xz - parallax*100.0*(1.0-bump);
         float fade = clamp(2.0 - 0.004*length(projectedPos), 0.0, 1.0);
         //projectedPos += fade*parallax;
 
