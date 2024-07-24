@@ -1,4 +1,4 @@
-name = "Newb X Future"
+name = "Newb X Future §gLite"
 version = [0, 16, 0]
 url = "https://github.com/1Sekon/newb-x-future/"
 authors = ["1Sekon", "devendrn"]
@@ -16,8 +16,8 @@ long = '''
 short = "A variant of Newb Shader for RenderDragon"
 
 [uuid] # Use https://www.uuidgenerator.net/version4
-header = "2b876f38-1181-4865-a860-45d47c2a2030"
-module = "4b5c2fae-0bf0-3415-a7a4-857809a4dc68"
+header = "5b876f38-1181-2765-a860-45d47c2a2030"
+module = "7b5c2fae-0bf0-3945-a7a4-857809a4dc68"
 
 [info]
 # %a = authors
@@ -47,24 +47,10 @@ description = '''
 '''
 
 [[subpack]]
-define = "GLOSSY_EFFECTS"
-materials = ["RenderChunk"]
-description = '''
-§lGlossy Effects§r\n - Always reflection effect
-'''
-
-[[subpack]]
 define = "SIMPLE_CLOUDS"
 materials = ["Clouds"]
 description = '''
 §lSimple Clouds§r\n - Use simple clouds if rounded clouds one lag
-'''
-
-[[subpack]]
-define = "MULTILAYER"
-materials = ["Clouds"]
-description = '''
-§lMultilayer Clouds§r\n - Enable multilayer rounded clouds, might lag on some device
 '''
 
 [[subpack]]

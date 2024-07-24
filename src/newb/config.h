@@ -43,7 +43,7 @@
 #define NL_NIGHT_BRIGHTNESS 0.007 // 0.0 dark ~ 2.0 bright
 #define NL_CAVE_BRIGHTNESS  0.2 // 0.0 dark ~ 2.0 bright
 #define NL_SHADOW_INTENSITY 0.8 // 0.0 no shadow ~ 1.0 strong shadow
-#define NL_BLINKING_TORCH     // [toggle] flickering light
+//#define NL_BLINKING_TORCH     // [toggle] flickering light
 //#define NL_CLOUD_SHADOW       // [toggle] cloud shadow (simple clouds only)
 
 /* Sun/moon light color on terrain */
@@ -94,9 +94,9 @@
 //#define NL_GLOW_LEAK 0.6 // [toggle] 0.08 subtle ~ 1.0 100% brightness of NL_GLOW_TEX
 
 /* Waving */
-#define NL_PLANTS_WAVE 0.07    // [toggle] 0.02 gentle ~ 0.4 violent
+#define NL_PLANTS_WAVE 0.06    // [toggle] 0.02 gentle ~ 0.4 violent
 #define NL_LANTERN_WAVE 0.15   // [toggle] 0.05 subtle ~ 0.4 large swing
-#define NL_WAVE_SPEED 1.3      // 0.5 slow wave ~ 5.0 very fast wave
+#define NL_WAVE_SPEED 0.8      // 0.5 slow wave ~ 5.0 very fast wave
 //#define NL_EXTRA_PLANTS_WAVE // [toggle] !dont use! wave using texture coords (1.21.0 vanilla 2048x1024)
 
 /* Water */
@@ -131,9 +131,9 @@
 #define NL_CLOUD1_OPACITY 0.85              // 0.0 invisible ~ 1.0 opaque
 
 /* Rounded cloud Settings */
-#define NL_CLOUD2_THICKNESS 2.1      // 0.5 slim ~ 5.0 fat
-#define NL_CLOUD2_RAIN_THICKNESS 2.2 // 0.5 slim ~ 5.0 fat
-#define NL_CLOUD2_STEPS 5            // 3 low quality ~ 16 high quality
+#define NL_CLOUD2_THICKNESS 0.835      // 0.5 slim ~ 5.0 fat
+#define NL_CLOUD2_RAIN_THICKNESS 0.835 // 0.5 slim ~ 5.0 fat
+#define NL_CLOUD2_STEPS 2            // 3 low quality ~ 16 high quality
 #define NL_CLOUD2_SCALE 0.035        // 0.003 large ~ 0.3 tiny
 #define NL_CLOUD2_SHAPE 0.65          // 0.0 round ~ 1.0 box
 #define NL_CLOUD2_DENSITY 5.0       // 1.0 blurry ~ 100.0 sharp
@@ -170,7 +170,7 @@
 #define NL_GROUND_RAIN_WETNESS 0.8 // 0.0 no wetness ~ 1.0 fully wet blocks when raining
 #define NL_GROUND_RAIN_PUDDLES 1.2 // 0.0 no puddles ~ 1.0 puddles
 //#define NL_GROUND_AURORA_REFL    // [toggle] aurora reflection on ground
-#define NXF_FAKE_DEPTH_TEX
+//#define NXF_FAKE_DEPTH_TEX
 
 /* -------- CONFIG ENDS HERE ----------- */
 
@@ -196,17 +196,6 @@
 #ifdef SIMPLE_CLOUDS
   #undef NL_CLOUD_TYPE
   #define NL_CLOUD_TYPE 1
-#endif
-
-#ifdef MULTILAYER
-  #define NL_CLOUD2_MULTILAYER
-  #undef NXF_CLOUD2_OPACITY
-  #define NXF_CLOUD2_OPACITY 1.0
-#endif
-
-#ifdef GLOSSY_EFFECTS
-  #define NL_GROUND_REFL 0.9
-  #define NL_GROUND_AURORA_REFL
 #endif
 
 #ifdef NO_WPWAVE

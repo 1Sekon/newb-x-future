@@ -63,6 +63,7 @@ void main() {
     }
   }
 
+/*
 // end reflection effects
   if (v_extra.b > 0.9) {
     diffuse.rgb += v_EndRefl.rgb*v_EndRefl.a;
@@ -75,6 +76,7 @@ void main() {
       diffuse.rgb += v_EndRefl.rgb*mask;
     }
   }
+*/
 
   diffuse.rgb = mix(diffuse.rgb, v_fog.rgb, v_fog.a);
   diffuse.rgb = colorCorrection(diffuse.rgb);
