@@ -1,6 +1,6 @@
 ![Screenshot1](docs/title.png "Title")
 ## Newb X Future
-Is a variant of [Newb Shader](https://github.com/devendrn/newb-x-mcbe) created by 1Sekon. Supports Minecraft Bedrock 1.21.20+ (Android and Windows).
+Is a variant of [Newb Shader](https://github.com/devendrn/newb-x-mcbe) created by 1Sekon. Supports Minecraft Bedrock 1.21.31+.
 
 
 ![Screenshot2](docs/screenshots.jpg "NewbXFuture")
